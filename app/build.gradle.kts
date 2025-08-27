@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
     kotlin("plugin.serialization") version "2.2.10"
+    alias(libs.plugins.google.gms.google.services)
 
 }
 
@@ -67,6 +68,9 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
+    implementation(libs.googleid)
     testImplementation(libs.junit)
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.junit.jupiter)
@@ -93,8 +97,16 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.accompanist.permissions)
 
+    //coil
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
     implementation(libs.androidx.material.icons.extended.android)
+
+    //firebase
+    implementation(platform (libs.firebase.bom))
+    implementation(libs.firebase.auth)
+//    implementation(libs.firebase.analytics)
+//    implementation(libs.firebase.crashlytics)
+//    implementation(libs.firebase.firestore)
 
 }
