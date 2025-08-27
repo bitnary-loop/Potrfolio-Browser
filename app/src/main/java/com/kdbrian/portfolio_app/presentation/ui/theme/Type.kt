@@ -1,10 +1,19 @@
-package com.kdbrian.templated.ui.theme
+package com.kdbrian.portfolio_app.presentation.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.kdbrian.portfolio_app.R
+
+val appFontFamily by lazy {
+    FontFamily(
+        fonts = listOf(
+            androidx.compose.ui.text.font.Font(R.font.frederickathegreat_regular, FontWeight.Normal),
+        )
+    )
+}
 
 // Set of Material typography styles to start with
 val Typography = Typography(

@@ -1,9 +1,9 @@
-package com.kdbrian.templated
+package com.kdbrian.portfolio_app
 
 import android.app.Application
 import timber.log.Timber
 
-class TemplatedApp : Application() {
+class PortfolioApp : Application() {
     override fun onCreate() {
         super.onCreate()
 

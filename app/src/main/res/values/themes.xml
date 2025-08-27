@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.Templated" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.Templated" parent="android:Theme.Material.Light.NoActionBar" >
+        <item name="fontFamily">@font/frederickathegreat_regular</item>
+    </style>
 </resources>

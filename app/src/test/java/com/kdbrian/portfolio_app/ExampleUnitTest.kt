@@ -1,4 +1,4 @@
-package com.kdbrian.templated
+package com.kdbrian.portfolio_app
 
 import org.junit.Test
 

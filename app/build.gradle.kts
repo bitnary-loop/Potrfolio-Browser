@@ -1,31 +1,20 @@
-import java.util.Properties
-
-val secrets = Properties()
-val secretsFile = rootProject.file("secrets.properties")
-
-if (secretsFile.exists()) {
-    secrets.load(secretsFile.inputStream())
-}
-
-fun getSecret(key: String): String? {
-    return secrets[key] as? String ?: System.getenv(key)
-}
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
+    kotlin("plugin.serialization") version "2.2.10"
+
 }
 
 android {
-    namespace = "com.kdbrian.templated"
-    compileSdk = 35
+    namespace = "com.kdbrian.portfolio_app"
+    compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.kdbrian.templated"
+        applicationId = "com.kdbrian.portfolio_app"
         minSdk = 26
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
@@ -46,19 +35,10 @@ android {
 
     productFlavors {
         create("dev") {
-            dimension = "env"
-            val envValue = getSecret("ENV") ?: "dev"
-            buildConfigField("String", "ENV", "\"$envValue\"")
         }
         create("staging") {
-            dimension = "env"
-            val envValue = getSecret("ENV") ?: "staging"
-            buildConfigField("String", "ENV", "\"$envValue\"")
         }
         create("prod") {
-            dimension = "env"
-            val envValue = getSecret("ENV") ?: "prod"
-            buildConfigField("String", "ENV", "\"$envValue\"")
         }
     }
 
@@ -109,5 +89,12 @@ dependencies {
     implementation(libs.koin.compose.viewmodel)
 
 
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.accompanist.permissions)
+
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
+    implementation(libs.androidx.material.icons.extended.android)
 
 }
