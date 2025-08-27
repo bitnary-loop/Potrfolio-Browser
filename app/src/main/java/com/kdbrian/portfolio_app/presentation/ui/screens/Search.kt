@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -31,17 +32,17 @@ import com.kdbrian.portfolio_app.presentation.ui.composables.VerticalStackedItem
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Search(
-
+    onClose: () -> Unit = {}
 ) {
 
     Scaffold(
         topBar = {
             TopAppBar(
-                modifier = Modifier.padding(12.dp),
+                modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
                 navigationIcon = {
-                    IconButton(onClick = {}) {
+                    IconButton(onClick = onClose) {
                         Icon(
-                            imageVector = Icons.Default.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
                             contentDescription = null
                         )
                     }
@@ -54,7 +55,9 @@ fun Search(
     ){ padding ->
 
         LazyColumn(
-            modifier = Modifier.padding(padding),
+            modifier = Modifier
+                .padding(padding)
+            ,
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ){
 

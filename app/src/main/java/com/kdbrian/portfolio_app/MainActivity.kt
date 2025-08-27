@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
+import com.kdbrian.portfolio_app.presentation.nav.MainApp
 import com.kdbrian.portfolio_app.presentation.ui.theme.PortfolioAppTheme
 import com.kdbrian.portfolio_app.presentation.ui.theme.appFontFamily
 
@@ -15,7 +16,11 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            App { }
+            App {
+                MainApp(
+
+                )
+            }
         }
     }
 }

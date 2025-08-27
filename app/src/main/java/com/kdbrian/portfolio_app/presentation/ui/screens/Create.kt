@@ -147,7 +147,7 @@ fun Create() {
                         contentAlignment = Alignment.Center
                     ) {
                         AsyncImage(
-                            model = "https://picsum.photos/200",
+                            model = imageUri,
                             modifier = Modifier.fillMaxSize(),
                             error = painterResource(R.drawable.___fiery_chicken_ramen_with_creamy_garlic_sauce),
                             contentScale = ContentScale.Crop,

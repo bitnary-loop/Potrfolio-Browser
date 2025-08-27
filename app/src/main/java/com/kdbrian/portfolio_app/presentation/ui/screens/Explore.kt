@@ -31,7 +31,8 @@ import com.kdbrian.portfolio_app.presentation.ui.composables.VerticalStackedItem
 
 @Composable
 fun Explore(
-
+    onSearch: () -> Unit = {},
+    openForYou: () -> Unit = {}
 ) {
 
     Scaffold(
@@ -59,7 +60,7 @@ fun Explore(
                     )
                 }
 
-                IconButton(onClick = {}) {
+                IconButton(onClick = onSearch) {
                     Icon(
                         imageVector = Icons.Default.Search,
                         contentDescription = null,

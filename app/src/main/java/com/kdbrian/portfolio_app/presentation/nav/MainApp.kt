@@ -20,7 +20,16 @@ fun MainApp(
     ){
 
         composable<GetStarted>{
-            GetStarted()
+            GetStarted(
+                onLogin = {
+                    navController.navigate(HomeScreen){
+                        popUpTo(0){
+                            inclusive = true
+                        }
+                        launchSingleTop = true
+                    }
+                }
+            )
         }
 
         composable<HomeScreen>{
