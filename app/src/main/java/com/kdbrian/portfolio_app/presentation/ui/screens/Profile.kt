@@ -37,7 +37,9 @@ import com.kdbrian.portfolio_app.util.DateUtils.toFormattedDate
 
 
 @Composable
-fun Profile() {
+fun Profile(
+    onLogout: () -> Unit = {}
+) {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
@@ -108,7 +110,7 @@ fun Profile() {
             )
 
 
-            TextButton(onClick = {}) {
+            TextButton(onClick = onLogout) {
                 Text(text = "Logout")
             }
 

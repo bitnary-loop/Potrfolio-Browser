@@ -18,12 +18,15 @@ import com.kdbrian.portfolio_app.LocalFontFamily
 fun CategoryItem(
     modifier: Modifier = Modifier,
     text: String = "Category",
+    onClick: () -> Unit = {}
 ) {
 
     Surface(
+        onClick = onClick,
         shape = RoundedCornerShape(50),
         shadowElevation = 3.dp,
-        modifier = modifier.padding(4.dp)
+        modifier = modifier
+            .padding(4.dp)
     ) {
 
         Text(

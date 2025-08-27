@@ -33,7 +33,7 @@ fun MainApp(
         }
 
         composable<HomeScreen>{
-            HomeScreen()
+            HomeScreen(navController = navController)
         }
 
 

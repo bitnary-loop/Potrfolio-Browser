@@ -1,5 +1,6 @@
 package com.kdbrian.portfolio_app.presentation.ui.composables
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,18 +37,27 @@ fun HorizontallyStackedItemDetails(
     modifier: Modifier = Modifier,
     image: String = "https://picsum.photos/200",
     title: String = LoremIpsum(3).values.joinToString(),
-    description: String = LoremIpsum(12).values.joinToString()
+    description: String = LoremIpsum(12).values.joinToString(),
+    onExpand: (String) -> Unit = {}
 ) {
 
-    Box(modifier = modifier.fillMaxWidth().heightIn(max = 180.dp)) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .heightIn(max = 180.dp)
+            .clickable {
+                onExpand(title)
+            }) {
 
-        Row (
+        Row(
             modifier = Modifier.padding(8.dp),
             verticalAlignment = Alignment.Top,
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Box(
-                modifier = Modifier.size(100.dp).clip(RoundedCornerShape(25))
+                modifier = Modifier
+                    .size(100.dp)
+                    .clip(RoundedCornerShape(25))
             ) {
                 AsyncImage(
                     model = image,
@@ -91,7 +101,7 @@ fun HorizontallyStackedItemDetails(
 private fun HorizontallyStackedItemDetailsPrev() {
     App {
         val scrollState = rememberScrollState()
-        Column (
+        Column(
             modifier = Modifier.verticalScroll(scrollState)
         ) {
             repeat(13) {

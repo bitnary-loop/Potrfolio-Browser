@@ -30,9 +30,11 @@ import com.kdbrian.portfolio_app.App
 import com.kdbrian.portfolio_app.presentation.nav.Create
 import com.kdbrian.portfolio_app.presentation.nav.Explore
 import com.kdbrian.portfolio_app.presentation.nav.ForYou
+import com.kdbrian.portfolio_app.presentation.nav.GetStarted
 import com.kdbrian.portfolio_app.presentation.nav.Profile
 import com.kdbrian.portfolio_app.presentation.nav.Route
 import com.kdbrian.portfolio_app.presentation.nav.Search
+import com.kdbrian.portfolio_app.presentation.nav.ViewSolution
 import timber.log.Timber
 
 
@@ -68,12 +70,14 @@ data class BottomBarItem(
 
 @Composable
 fun HomeScreen(
-    navController: NavHostController = rememberNavController(),
+    navController: NavHostController,
 ) {
 
-    val backStackEntryAsState by navController.currentBackStackEntryAsState()
+
+    val homeNavController = rememberNavController()
+    val backStackEntryAsState by homeNavController.currentBackStackEntryAsState()
     val moveToScreen: (Route) -> Unit = {
-        navController.navigate(it) {
+        homeNavController.navigate(it) {
             popUpTo(0) {
                 inclusive = true
             }
@@ -128,7 +132,7 @@ fun HomeScreen(
         }
     ) { paddingValues ->
         NavHost(
-            navController = navController,
+            navController = homeNavController,
             startDestination = Create,
             modifier = Modifier.padding(paddingValues)
         ) {
@@ -137,27 +141,46 @@ fun HomeScreen(
             }
 
             composable<Profile> {
-                Profile()
+                Profile(
+                    onLogout ={
+                        Timber.d("onLogout")
+                        navController.navigate(GetStarted){
+                            popUpTo(0){
+                                inclusive = true
+                            }
+                            launchSingleTop = true
+                        }
+                    }
+                )
             }
 
             composable<Explore> {
                 Explore(
+                    onExpand = { id -> homeNavController.navigate(ViewSolution) },
                     onSearch = {
-                        navController.navigate(Search)
+                        homeNavController.navigate(Search)
                     }
                 )
             }
 
-            composable<Search>{
+            composable<Search> {
                 Search(
                     onClose = {
-                        navController.popBackStack()
+                        homeNavController.popBackStack()
                     }
                 )
             }
 
-            composable<ForYou>{
+            composable<ForYou> {
                 ForYou()
+            }
+
+            composable<ViewSolution> {
+                ViewSolution(
+                    onClose = {
+                        homeNavController.popBackStack()
+                    }
+                )
             }
 
 
@@ -171,6 +194,6 @@ fun HomeScreen(
 @Composable
 private fun HomeScreenPrev() {
     App {
-        HomeScreen()
+        HomeScreen(rememberNavController())
     }
 }

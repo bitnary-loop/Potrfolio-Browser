@@ -29,5 +29,8 @@ data object Profile : Route()
 @Serializable
 data object Create : Route()
 
+@Serializable
+data object ViewSolution : Route()
+
 
 

@@ -1,5 +1,6 @@
 package com.kdbrian.portfolio_app.presentation.ui.composables
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -34,16 +35,21 @@ fun VerticalStackedItemDetails(
     modifier: Modifier = Modifier,
     image: String = "https://picsum.photos/200",
     title: String = LoremIpsum(3).values.joinToString(),
-    description: String = LoremIpsum(12).values.joinToString()
+    description: String = LoremIpsum(12).values.joinToString(),
+    onExpand: (String) -> Unit = {}
 ) {
 
-    Box(modifier = modifier.widthIn(max = 250.dp)) {
+    Box(modifier = modifier
+        .widthIn(max = 250.dp)
+        .clickable { onExpand(title) }) {
         Column(
             modifier = Modifier.padding(8.dp),
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Box(
-                modifier = Modifier.size(150.dp).clip(RoundedCornerShape(10))
+                modifier = Modifier
+                    .size(150.dp)
+                    .clip(RoundedCornerShape(10))
             ) {
                 AsyncImage(
                     model = image,

@@ -22,8 +22,7 @@ fun SurfacedButton(
 ) {
 
     Surface(
-        modifier = modifier
-        ,
+        modifier = modifier,
         onClick = onClick,
         shape = RoundedCornerShape(50)
     ){
