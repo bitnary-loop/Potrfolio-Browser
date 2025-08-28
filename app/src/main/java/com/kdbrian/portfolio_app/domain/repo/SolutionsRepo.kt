@@ -8,6 +8,6 @@ interface SolutionsRepo {
         get() = "${BuildConfig.APPLICATION_ID}/solutions"
     suspend fun loadSolutions(): Result<List<Solution>>
     suspend fun loadSolution(id: String): Result<Solution>
-    suspend fun addSolution(solution: Solution): Result<Unit>
-    suspend fun deleteSolution(id: String): Result<Unit>
+    suspend fun addSolution(solution: Solution): Result<Boolean>
+    suspend fun deleteSolution(id: String): Result<Boolean>
 }

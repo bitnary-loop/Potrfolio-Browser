@@ -7,23 +7,26 @@ import kotlinx.serialization.Serializable
 data class Solution(
     val id: String,
     val name: String,
+    val description: String,
     val owner: String,
     val link: String,
     val logo: String,
     val infoFile: String,
     val addedOn: Long = System.currentTimeMillis()
-){
+) {
     //make constructor private
     private constructor(
         id: String,
         name: String,
+        description: String,
         owner: String,
         link: String,
         logo: String,
-        infoFile: String
+        infoFile: String,
     ) : this(
         id = id,
         name = name,
+        description = description,
         owner = owner,
         link = link,
         logo = logo,
@@ -31,13 +34,16 @@ data class Solution(
         addedOn = System.currentTimeMillis()
     )
 
-    class Builder{
+
+    class Builder {
         private var id: String = ""
         private var name: String = ""
+        private var description: String = ""
         private var owner: String = ""
         private var link: String = ""
         private var logo: String = ""
         private var infoFile: String = ""
+
 
         fun id(id: String) = apply { this.id = id }
         fun name(name: String) = apply { this.name = name }
@@ -45,14 +51,16 @@ data class Solution(
         fun link(link: String) = apply { this.link = link }
         fun logo(logo: String) = apply { this.logo = logo }
         fun infoFile(infoFile: String) = apply { this.infoFile = infoFile }
+        fun description(description: String) = apply { this.description = description }
 
         fun build() = Solution(
             id = id,
             name = name,
+            description = description,
             owner = owner,
             link = link,
             logo = logo,
-            infoFile = infoFile
+            infoFile = infoFile,
         )
 
     }

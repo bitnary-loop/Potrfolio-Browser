@@ -7,13 +7,13 @@ import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.material.icons.rounded.AddCircleOutline
 import androidx.compose.material.icons.rounded.Explore
 import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -35,6 +35,8 @@ import com.kdbrian.portfolio_app.presentation.nav.Profile
 import com.kdbrian.portfolio_app.presentation.nav.Route
 import com.kdbrian.portfolio_app.presentation.nav.Search
 import com.kdbrian.portfolio_app.presentation.nav.ViewSolution
+import com.kdbrian.portfolio_app.presentation.ui.state.CreateScreenViewModel
+import org.koin.compose.viewmodel.koinViewModel
 import timber.log.Timber
 
 
@@ -87,10 +89,12 @@ fun HomeScreen(
     val route = remember {
         backStackEntryAsState?.destination?.route
     }
-
     LaunchedEffect(backStackEntryAsState) {
         Timber.d("route: $route")
     }
+
+    val createScreenViewModel = koinViewModel<CreateScreenViewModel>()
+    val createScreenUiState by createScreenViewModel.createScreenUiState.collectAsState()
 
     Scaffold(
         bottomBar = {
@@ -137,15 +141,24 @@ fun HomeScreen(
             modifier = Modifier.padding(paddingValues)
         ) {
             composable<Create> {
-                Create()
+                Create(
+                    onSave = createScreenViewModel::createSolution,
+                    onFileInfoChange = createScreenViewModel::onFileInfoChange,
+                    createScreenUiState = createScreenUiState,
+                    onNameChange = createScreenViewModel::onNameChange,
+                    onDescriptionChange = createScreenViewModel::onDescriptionChange,
+                    onLinkChange = createScreenViewModel::onLinkChange,
+                    onImageUriChange = createScreenViewModel::onImageUriChange,
+                    onInfoGraphicUriChange = createScreenViewModel::onInfoGraphicUriChange
+                )
             }
 
             composable<Profile> {
                 Profile(
-                    onLogout ={
+                    onLogout = {
                         Timber.d("onLogout")
-                        navController.navigate(GetStarted){
-                            popUpTo(0){
+                        navController.navigate(GetStarted) {
+                            popUpTo(0) {
                                 inclusive = true
                             }
                             launchSingleTop = true

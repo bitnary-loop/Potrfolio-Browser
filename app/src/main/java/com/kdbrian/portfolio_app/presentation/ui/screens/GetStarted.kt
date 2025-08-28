@@ -42,12 +42,14 @@ import org.koin.compose.koinInject
 
 @Composable
 fun GetStarted(
+    createAccountState: Resource<Boolean> = Resource.Idle(),
     emailPasswordState: Resource<Boolean> = Resource.Idle(),
     signInUiState: SignInUiState = SignInUiState(),
     onEmailChanged: (String) -> Unit = {},
     onPasswordChanged: (String) -> Unit = {},
     onPasswordVisibilityChanged: () -> Unit = {},
-    onLogin: () -> Unit = {}
+    onLogin: () -> Unit = {},
+    onCreateAccount: () -> Unit = {},
 ) {
 
     val firebaseAuth = koinInject<FirebaseAuth>()
@@ -55,15 +57,8 @@ fun GetStarted(
     val context = LocalContext.current
 
     LaunchedEffect(emailPasswordState) {
-        if (emailPasswordState is Resource.Error && emailPasswordState.message.isNotEmpty())
-            context.toast(message = emailPasswordState.message, apply = {
-                this.setGravity(
-                    android.view.Gravity.NO_GRAVITY,
-                    0,
-                    0
-                )
-            })
-
+        if (emailPasswordState is Resource.Error && emailPasswordState.message?.isNotEmpty() == true)
+            context.toast(message = emailPasswordState.message)
     }
 
     Box(
@@ -169,12 +164,17 @@ fun GetStarted(
                     }
             )
 
-            if (emailPasswordState is Resource.Loading)
+            if (emailPasswordState is Resource.Loading || createAccountState is Resource.Loading)
                 CircularProgressIndicator()
-            else
+            else{
                 Button(onClick = onLogin) {
                     Text(text = "Login")
                 }
+
+                Button(onClick = onCreateAccount) {
+                    Text(text = "Create Account")
+                }
+            }
 
         }
 

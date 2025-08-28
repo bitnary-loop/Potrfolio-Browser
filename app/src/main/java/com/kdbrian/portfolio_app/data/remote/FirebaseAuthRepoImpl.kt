@@ -26,4 +26,26 @@ class FirebaseAuthRepoImpl(
 
 
     }
+
+    override suspend fun emailPasswordSignUp(
+        email: String,
+        password: String
+    ): Result<Boolean> = withContext(Dispatchers.IO) {
+        try {
+            val authResult = auth.createUserWithEmailAndPassword(email, password).await()
+            if (authResult.user == null) {
+                Result.failure(Exception("Invalid authentication details."))
+            } else
+                Result.success(true)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+
+
+    }
+
+
+
+
+
 }

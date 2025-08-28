@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -27,12 +26,18 @@ fun MainApp(
     val context = LocalContext.current
     val signInViewModel = koinViewModel<SignInViewModel>()
     val signInState by signInViewModel.signInState.collectAsState()
+    val createAccountState by signInViewModel.createAccountState.collectAsState()
     val emailPasswordState by signInViewModel.emailPasswordState.collectAsState()
+    val messages by signInViewModel.messages.collectAsState(Resource.Idle())
 
     val firebaseAuth = koinInject<FirebaseAuth>()
 
-    LaunchedEffect(emailPasswordState) {
-        if (emailPasswordState is Resource.Success && firebaseAuth.currentUser != null) {
+    LaunchedEffect(emailPasswordState, createAccountState) {
+        if (
+            emailPasswordState is Resource.Success &&
+            createAccountState is Resource.Success &&
+            firebaseAuth.currentUser != null
+        ) {
             context.toast("Logged in successfully")
             navController.navigate(HomeScreen) {
                 popUpTo(GetStarted) {
@@ -41,6 +46,12 @@ fun MainApp(
                 launchSingleTop = true
             }
         }
+
+    }
+
+    LaunchedEffect(messages) {
+        if (messages is Resource.Error || messages.message?.isNotEmpty() == true)
+            context.toast(message = messages.message ?: messages.data ?: "")
     }
 
 
@@ -56,7 +67,8 @@ fun MainApp(
                 onPasswordChanged = signInViewModel::onPasswordChanged,
                 onPasswordVisibilityChanged = signInViewModel::onPasswordVisibilityChanged,
                 signInUiState = signInState,
-                onLogin = signInViewModel::emailPasswordSignIn
+                onLogin = signInViewModel::emailPasswordSignIn,
+                onCreateAccount = signInViewModel::emailPasswordSignUp
             )
         }
 
