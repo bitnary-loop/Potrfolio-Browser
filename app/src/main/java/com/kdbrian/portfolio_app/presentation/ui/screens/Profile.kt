@@ -1,5 +1,7 @@
 package com.kdbrian.portfolio_app.presentation.ui.screens
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,6 +13,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Send
+import androidx.compose.material.icons.rounded.Verified
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -21,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -28,18 +32,25 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import com.google.firebase.auth.FirebaseAuth
 import com.kdbrian.portfolio_app.App
 import com.kdbrian.portfolio_app.BuildConfig
 import com.kdbrian.portfolio_app.R
 import com.kdbrian.portfolio_app.presentation.ui.composables.SurfacedButton
 import com.kdbrian.portfolio_app.util.DateUtils
 import com.kdbrian.portfolio_app.util.DateUtils.toFormattedDate
+import com.kdbrian.portfolio_app.util.toast
+import org.koin.compose.koinInject
 
 
 @Composable
 fun Profile(
     onLogout: () -> Unit = {}
 ) {
+    val firebaseAuth = koinInject<FirebaseAuth>()
+    val context = LocalContext.current
+
+
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
@@ -57,7 +68,7 @@ fun Profile(
                     .clip(CircleShape)
             ) {
                 AsyncImage(
-                    model = "https://picsum.photos/200",
+                    model = firebaseAuth.currentUser?.photoUrl,
                     contentDescription = null,
                     error = painterResource(id = R.drawable.___fiery_chicken_ramen_with_creamy_garlic_sauce),
                     contentScale = ContentScale.Crop,
@@ -66,7 +77,7 @@ fun Profile(
             }
 
             Text(
-                text = "KDBrian",
+                text = firebaseAuth.currentUser?.displayName ?: "---",
                 style = MaterialTheme.typography.titleLarge.copy(
                     fontFamily = com.kdbrian.portfolio_app.LocalFontFamily.current,
                     fontWeight = FontWeight.SemiBold
@@ -74,7 +85,7 @@ fun Profile(
             )
 
             Text(
-                text = "kdbrian@dev.com",
+                text = firebaseAuth.currentUser?.email ?: "---",
                 style = MaterialTheme.typography.bodyMedium.copy(
                     fontFamily = com.kdbrian.portfolio_app.LocalFontFamily.current,
                     fontWeight = FontWeight.Light
@@ -88,11 +99,27 @@ fun Profile(
                     Text(text = "Verify email")
                 },
                 trailingIcon = {
-                    Icon(
-                        imageVector = Icons.Rounded.Send,
-                        contentDescription = null,
-                        modifier = Modifier.rotate((-40).toFloat())
-                    )
+                    AnimatedContent(
+                        firebaseAuth.currentUser != null && firebaseAuth.currentUser!!.isEmailVerified
+                    ) {
+                        if (it) {
+                            Icon(
+                                imageVector = Icons.Rounded.Verified,
+                                contentDescription = null,
+                            )
+                        } else
+                            Icon(
+                                imageVector = Icons.Rounded.Send,
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .rotate((-40).toFloat())
+                                    .clickable {
+                                        firebaseAuth.currentUser!!.sendEmailVerification()
+                                        context.toast("Verification email sent")
+                                    }
+                            )
+
+                    }
                 }
             )
 
@@ -110,7 +137,10 @@ fun Profile(
             )
 
 
-            TextButton(onClick = onLogout) {
+            TextButton(onClick = {
+                firebaseAuth.signOut()
+                onLogout()
+            }) {
                 Text(text = "Logout")
             }
 

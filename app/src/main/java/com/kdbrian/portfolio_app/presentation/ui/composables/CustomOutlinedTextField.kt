@@ -44,6 +44,10 @@ fun CustomOutlinedTextField(
     shape: Shape = RoundedCornerShape(12.dp),
     trailingIcon: (@Composable () -> Unit)? = null,
     colors: TextFieldColors = OutlinedTextFieldDefaults.colors(
+        disabledTextColor = Color.LightGray,
+        errorTextColor = Color.Red,
+        unfocusedTextColor = Color.LightGray,
+        focusedTextColor = Color.DarkGray,
         focusedBorderColor = Color.LightGray,
         errorBorderColor = Color.LightGray,
         disabledBorderColor = Color.LightGray,

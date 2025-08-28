@@ -1,6 +1,7 @@
 package com.kdbrian.portfolio_app.presentation.ui.screens
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,13 +28,16 @@ import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.google.firebase.auth.FirebaseAuth
 import com.kdbrian.portfolio_app.App
 import com.kdbrian.portfolio_app.presentation.ui.composables.CustomOutlinedTextField
 import com.kdbrian.portfolio_app.presentation.ui.state.SignInUiState
 import com.kdbrian.portfolio_app.util.Resource
 import com.kdbrian.portfolio_app.util.toast
+import org.koin.compose.koinInject
 
 
 @Composable
@@ -46,6 +50,7 @@ fun GetStarted(
     onLogin: () -> Unit = {}
 ) {
 
+    val firebaseAuth = koinInject<FirebaseAuth>()
     val focusManager = LocalFocusManager.current
     val context = LocalContext.current
 
@@ -92,7 +97,10 @@ fun GetStarted(
                 },
                 value = signInUiState.email,
                 onValueChange = onEmailChanged,
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Next,
+                    keyboardType = KeyboardType.Email
+                ),
                 keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Down) })
             )
 
@@ -128,8 +136,37 @@ fun GetStarted(
                 placeholder = {
                     Text(text = "Enter your password")
                 },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                visualTransformation = if (signInUiState.isPasswordVisible)
+                    androidx.compose.ui.text.input.PasswordVisualTransformation('\u2728')
+                else
+                    androidx.compose.ui.text.input.VisualTransformation.None,
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Done,
+                    keyboardType = KeyboardType.Password
+                ),
                 keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() })
+            )
+
+            Text(
+                text = "Forgot password?",
+                modifier = Modifier
+                    .align(Alignment.End)
+                    .padding(12.dp)
+                    .clickable {
+                        if (signInUiState.email.isNotEmpty() && android.util.Patterns.EMAIL_ADDRESS.matcher(
+                                signInUiState.email
+                            ).matches()
+                        ) {
+                            firebaseAuth.sendPasswordResetEmail(signInUiState.email)
+                                .addOnSuccessListener {
+                                    context.toast("Password reset email sent")
+                                }
+                                .addOnFailureListener {
+                                    context.toast(it.message ?: "Something went wrong")
+                                }
+                        } else
+                            context.toast("Invalid email")
+                    }
             )
 
             if (emailPasswordState is Resource.Loading)
